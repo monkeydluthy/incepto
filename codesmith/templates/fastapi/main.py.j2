@@ -1,0 +1,30 @@
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+
+app = FastAPI(
+    title="{{ project_name }}",
+    description="{{ description }}"
+)
+
+# Configure CORS
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+@app.get("/")
+async def root():
+    return {"message": "Welcome to {{ project_name }}"}
+
+{% for entity in entities %}
+@app.get("/{{ entity.name | lower }}s")
+async def list_{{ entity.name | lower }}s():
+    return {"message": "List {{ entity.name }}s"}
+
+@app.post("/{{ entity.name | lower }}s")
+async def create_{{ entity.name | lower }}():
+    return {"message": "Create {{ entity.name }}"}
+{% endfor %} 

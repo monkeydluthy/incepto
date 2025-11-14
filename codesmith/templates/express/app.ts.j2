@@ -1,0 +1,27 @@
+import express from 'express';
+import cors from 'cors';
+import { json } from 'body-parser';
+
+const app = express();
+
+app.use(cors());
+app.use(json());
+
+app.get('/', (req, res) => {
+  res.json({ message: 'Welcome to {{ project_name }}' });
+});
+
+{% for entity in entities %}
+app.get('/{{ entity.name | lower }}s', (req, res) => {
+  res.json({ message: 'List {{ entity.name }}s' });
+});
+
+app.post('/{{ entity.name | lower }}s', (req, res) => {
+  res.json({ message: 'Create {{ entity.name }}' });
+});
+{% endfor %}
+
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
+}); 

@@ -1,0 +1,18 @@
+from typing import Optional, List
+from pydantic import BaseModel
+
+{% for entity in entities %}
+class {{ entity.name }}Base(BaseModel):
+    {% for field in entity.fields %}
+    {{ field.name }}: {% if not field.required %}Optional[{% endif %}{{ field.type }}{% if not field.required %}]{% endif %}
+    {% endfor %}
+
+class {{ entity.name }}Create({{ entity.name }}Base):
+    pass
+
+class {{ entity.name }}({{ entity.name }}Base):
+    id: int
+    
+    class Config:
+        from_attributes = True
+{% endfor %} 
